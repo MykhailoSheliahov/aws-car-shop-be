@@ -13,9 +13,6 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: "ts-loader",
-          },
-          {
             loader: "babel-loader",
             options: {
               presets: [["@babel/preset-typescript"], ["@babel/preset-env"]],
@@ -26,7 +23,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [".mjs", ".json", ".ts", ".js"],
+    extensions: [".mjs", ".ts", ".tsx", ".js", ".json"],
   },
   output: {
     libraryTarget: "commonjs",
