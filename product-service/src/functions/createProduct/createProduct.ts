@@ -1,3 +1,4 @@
+
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import aws from 'aws-sdk'
 
@@ -10,24 +11,27 @@ export const handler: APIGatewayProxyHandler = async (event, _context, _callback
 
     const dynamo = new aws.DynamoDB.DocumentClient();
 
-    const id = event.pathParameters.id;
+    const body = JSON.parse(event.body);
 
-    const product = await ProductsController.getById(dynamo, id);
-    const stocks = await StocksController.getAll(dynamo);
+    const id = Math.floor(Math.random() * 1000000000).toString();
 
-    const result = product.map(product => {
-      const stockItem = stocks.find(stock => stock.product_id === product.id)
+    const product = {
+      id,
+      description: body.description,
+      title: body.title,
+      price: body.price,
+    };
 
-      product.count = stockItem
-        ? stockItem.count
-        : null
+    const stock = {
+      id: Math.floor(Math.random() * 1000000000).toString(),
+      product_id: id,
+      count: body.count
+    };
 
-      return product
-    })[0]
-
-    if (!result) {
-      throw new Error("No product");
-    }
+    await Promise.all([
+      ProductsController.addProduct(dynamo, product),
+      StocksController.addStock(dynamo, stock)
+    ]);
 
     return {
       statusCode: 200,
@@ -35,12 +39,16 @@ export const handler: APIGatewayProxyHandler = async (event, _context, _callback
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
       },
-      body: JSON.stringify(result, null, 2),
+      body: JSON.stringify({
+        message: 'Product added',
+        product
+      }, null, 2),
     }
+
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message }, null, 2),
+      body: JSON.stringify(error, null, 2),
     };
   }
-};
+}

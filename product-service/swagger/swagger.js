@@ -2,7 +2,7 @@
             module.exports = {
   "swagger": "2.0",
   "info": {
-    "title": "product-service",
+    "title": "Product Service",
     "version": "1"
   },
   "paths": {
@@ -23,6 +23,42 @@
             "description": "successful API Response",
             "schema": {
               "$ref": "#/definitions/Product"
+            }
+          },
+          "404": {
+            "description": "error API Response",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "createProduct",
+        "description": "",
+        "operationId": "createProduct.post.products",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Body required in the request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful API Response",
+            "schema": {
+              "$ref": "#/definitions/PostProduct"
             }
           },
           "404": {
@@ -88,16 +124,40 @@
         "price": {
           "title": "Product.price",
           "type": "number"
+        },
+        "count": {
+          "title": "Product.count",
+          "type": "number"
         }
       },
       "required": [
         "id",
         "title",
         "description",
-        "price"
+        "price",
+        "count"
       ],
       "additionalProperties": false,
       "title": "Product",
+      "type": "object"
+    },
+    "PostProduct": {
+      "properties": {
+        "message": {
+          "title": "PostProduct.message",
+          "type": "string"
+        },
+        "product": {
+          "$ref": "#/definitions/Product",
+          "title": "PostProduct.product"
+        }
+      },
+      "required": [
+        "message",
+        "product"
+      ],
+      "additionalProperties": false,
+      "title": "PostProduct",
       "type": "object"
     },
     "Error": {
@@ -113,12 +173,32 @@
       "additionalProperties": false,
       "title": "Error",
       "type": "object"
+    },
+    "Stocks": {
+      "properties": {
+        "id": {
+          "title": "Stocks.id",
+          "type": "string"
+        },
+        "product_id": {
+          "title": "Stocks.product_id",
+          "type": "string"
+        },
+        "count": {
+          "title": "Stocks.count",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "product_id",
+        "count"
+      ],
+      "additionalProperties": false,
+      "title": "Stocks",
+      "type": "object"
     }
   },
   "securityDefinitions": {},
-  "basePath": "/dev",
-  "schemes": [
-    "http",
-    "https"
-  ]
+  "basePath": "/dev"
 };

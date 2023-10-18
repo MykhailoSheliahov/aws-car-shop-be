@@ -93,3 +93,43 @@ The project code base is mainly located within the `src` folder. This folder is 
 ### Advanced usage
 
 Any tsconfig.json can be used, but if you do, set the environment variable `TS_NODE_CONFIG` for building the application, eg `TS_NODE_CONFIG=./tsconfig.app.json npx serverless webpack`
+
+
+### Database DynamoDB
+
+### Product Table
+
+### Get all products
+
+- aws dynamodb scan --table-name Products
+
+### Add product
+
+- aws dynamodb put-item --table-name Products --item '{ "id": { "S": "1" }, "title": { "S": "BMW" }, "description": { "S": "Short Product Description BMW" }, "price": { "N": "24" } } '
+- aws dynamodb put-item --table-name Products --item '{ "id": { "S": "2" }, "title": { "S": "Volvo" }, "description": { "S": "Short Product Description Volvo" }, "price": { "N": "15" } } '
+- aws dynamodb put-item --table-name Products --item '{ "id": { "S": "3" }, "title": { "S": "Tesla" }, "description": { "S": "Short Product Description Tesla" }, "price": { "N": "23" } } '
+- aws dynamodb put-item --table-name Products --item '{ "id": { "S": "4" }, "title": { "S": "Porsche" }, "description": { "S": "Short Product Description Porsche" }, "price": { "N": "14" } } '
+- aws dynamodb put-item --table-name Products --item '{ "id": { "S": "5" }, "title": { "S": "Volkswagen" }, "description": { "S": "Short Product Description Volkswagen" }, "price": { "N": "3" } } '
+- aws dynamodb put-item --table-name Products --item '{ "id": { "S": "6" }, "title": { "S": "Nissan" }, "description": { "S": "Short Product Description Nissan" }, "price": { "N": "5" } } '
+- aws dynamodb put-item --table-name Products --item '{ "id": { "S": "7" }, "title": { "S": "Toyota" }, "description": { "S": "Short Product Description Toyota" }, "price": { "N": "9" } } '
+- aws dynamodb put-item --table-name Products --item '{ "id": { "S": "8" }, "title": { "S": "Alfa Romeo" }, "description": { "S": "Short Product Description Alfa Romeo" }, "price": { "N": "10" } }'
+
+
+### Stocks Table
+
+### Get all stocks
+
+- aws dynamodb scan --table-name Stocks
+
+### Add stock
+
+- aws dynamodb put-item --table-name Stocks --item '{ "id": { "S": "1" }, "product_id": { "S": "1" }, "count": { "N": "5" } } '
+- aws dynamodb put-item --table-name Stocks --item '{ "id": { "S": "2" }, "product_id": { "S": "2" }, "count": { "N": "10" } } '
+- aws dynamodb put-item --table-name Stocks --item '{ "id": { "S": "3" }, "product_id": { "S": "3" }, "count": { "N": "15" } } '
+- aws dynamodb put-item --table-name Stocks --item '{ "id": { "S": "4" }, "product_id": { "S": "4" }, "count": { "S": "20" } } '
+- aws dynamodb put-item --table-name Stocks --item '{ "id": { "S": "5" }, "product_id": { "S": "5" }, "count": { "S": "25" } } '
+- aws dynamodb put-item --table-name Stocks --item '{ "id": { "S": "6" }, "product_id": { "S": "6" }, "count": { "S": "30" } } '
+- aws dynamodb put-item --table-name Stocks --item '{ "id": { "S": "7" }, "product_id": { "S": "7" }, "count": { "S": "35" } } '
+- aws dynamodb put-item --table-name Stocks --item '{ "id": { "S": "8" }, "product_id": { "S": "8" }, "count": { "S": "40" } } '
+
+

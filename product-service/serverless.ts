@@ -1,8 +1,12 @@
-// import type { AWS } from '@serverless/typescript';
+import * as dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.join(__dirname, './', '.env') });
 
 const serverlessConfiguration = {
   service: 'product-service',
   frameworkVersion: '3',
+  useDotenv: true,
   plugins: ['serverless-auto-swagger', 'serverless-webpack', 'serverless-offline', 'serverless-esbuild'],
   provider: {
     name: 'aws',
@@ -39,7 +43,11 @@ const serverlessConfiguration = {
             }
           },
         },
-      ]
+      ],
+      environment: {
+        TABLE_PRODUCTS: process.env.TABLE_PRODUCTS,
+        TABLE_STOCKS: process.env.TABLE_STOCKS
+      }
     },
     getProductsById: {
       handler: 'src/functions/getProductsById/getProductsById.handler',
@@ -70,21 +78,51 @@ const serverlessConfiguration = {
           }
         }
 
-      ]
+      ],
+      environment: {
+        TABLE_PRODUCTS: process.env.TABLE_PRODUCTS,
+        TABLE_STOCKS: process.env.TABLE_STOCKS
+      }
+    },
+    createProduct: {
+      handler: 'src/functions/createProduct/createProduct.handler',
+      events: [
+        {
+          http: {
+            path: 'products',
+            method: 'post',
+            cors: true,
+            bodyType: "Product",
+            responses: {
+              200: {
+                description: 'successful API Response',
+                bodyType: "PostProduct"
+              },
+              404: {
+                description: 'error API Response',
+                bodyType: "Error"
+              }
+            }
+          }
+        }
+
+      ],
+      environment: {
+        TABLE_PRODUCTS: process.env.TABLE_PRODUCTS,
+        TABLE_STOCKS: process.env.TABLE_STOCKS
+      }
     }
   },
   package: { individually: true },
   custom: {
     autoswagger: {
-      typefiles: ['./src/types/products.d.ts', './src/types/error.d.ts'],
+      title: 'Product Service',
+      typefiles: ['./src/types/products.d.ts', './src/types/error.d.ts', './src/types/stocks.d.ts'],
       apiType: 'http',
-      generateSwaggerOnDeploy: true,
       swaggerPath: 'swagger',
       useStage: false,
       basePath: '/${sls:stage}',
-      schemes: ['http', 'https'],
       excludeStages: ['test', 'prod', 'production'],
-      useRedirectUI: true
     },
     esbuild: {
       bundle: true,

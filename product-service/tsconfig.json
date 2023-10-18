@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.paths.json",
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "lib": ["ESNext"],
     "moduleResolution": "node",
     "resolveJsonModule": true,
