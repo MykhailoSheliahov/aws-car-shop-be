@@ -3,10 +3,19 @@ export interface Product {
   title: string,
   description: string,
   price: number,
-  count:number
+  count: number
 }
 
 export interface PostProduct {
-  message:string,
+  message: string,
   product: Product
+}
+
+export type ProductToSave = Omit<Product, 'id'>;
+
+export type SQSProduct = {
+  title: string;
+  description: string;
+  count: number;
+  price: number;
 }

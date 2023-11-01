@@ -160,6 +160,38 @@
       "title": "PostProduct",
       "type": "object"
     },
+    "ProductToSave": {
+      "title": "ProductToSave"
+    },
+    "SQSProduct": {
+      "properties": {
+        "title": {
+          "title": "SQSProduct.title",
+          "type": "string"
+        },
+        "description": {
+          "title": "SQSProduct.description",
+          "type": "string"
+        },
+        "count": {
+          "title": "SQSProduct.count",
+          "type": "number"
+        },
+        "price": {
+          "title": "SQSProduct.price",
+          "type": "number"
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "count",
+        "price"
+      ],
+      "additionalProperties": false,
+      "title": "SQSProduct",
+      "type": "object"
+    },
     "Error": {
       "properties": {
         "error": {

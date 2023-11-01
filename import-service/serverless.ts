@@ -1,4 +1,3 @@
-import type { AWS } from '@serverless/typescript'
 import * as dotenv from 'dotenv';
 import path from 'path';
 
@@ -11,27 +10,40 @@ const serverlessConfiguration = {
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
-    region: 'eu-west-1',
+    region:  process.env.REGION,
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
     iamManagedPolicies: [
-      "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
     ],
+    environment: {
+      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      REGION: process.env.REGION,
+      BUCKET: process.env.BUCKET,
+      AWS_ACCOUNT_NUMBER: process.env.AWS_ACCOUNT_NUMBER,
+      SQS_QUEUE_NAME: process.env.SQS_QUEUE_NAME,
+    },
     iamRoleStatements: [
       {
-        "Effect": "Allow",
-        "Action": [
-          "s3:PutObject",
-          "s3:GetObject",
-          "s3:ListAllMyBuckets",
-          "s3:ListBucket",
-          "s3:DeleteObject",
-          "s3:PutObjectAcl"
+        Effect: 'Allow',
+        Action: [
+          's3:PutObject',
+          's3:GetObject',
+          's3:ListAllMyBuckets',
+          's3:ListBucket',
+          's3:DeleteObject',
+          's3:PutObjectAcl'
         ],
-        "Resource": "*"
+        Resource: '*'
       },
+      {
+        Effect: 'Allow',
+        Action: ['sqs:SendMessage'],
+        Resource: `arn:aws:sqs:${process.env.REGION}:${process.env.AWS_ACCOUNT_NUMBER}:${process.env.SQS_QUEUE_NAME}`
+      }
     ],
   },
   functions: {
@@ -53,20 +65,16 @@ const serverlessConfiguration = {
             responses: {
               200: {
                 description: 'successful API Response',
-                bodyType: "File"
+                bodyType: 'File'
               },
               404: {
                 description: 'error API Response',
-                bodyType: "Error"
+                bodyType: 'Error'
               }
             }
           },
         },
       ],
-      environment: {
-        BUCKET: process.env.BUCKET,
-        REGION: process.env.REGION,
-      }
     },
     importFileParser: {
       handler: 'src/functions/importFileParser/importFileParser.handler',
@@ -83,10 +91,6 @@ const serverlessConfiguration = {
           }
         },
       ],
-      environment: {
-        BUCKET: process.env.BUCKET,
-        REGION: process.env.REGION,
-      }
     }
   },
   package: { individually: true },
