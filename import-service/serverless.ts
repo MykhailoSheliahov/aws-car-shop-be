@@ -10,7 +10,7 @@ const serverlessConfiguration = {
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
-    region:  process.env.REGION,
+    region: process.env.REGION,
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -46,6 +46,30 @@ const serverlessConfiguration = {
       }
     ],
   },
+  resources: {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    Resources: {
+      "RestApi": {
+        "Type": "AWS::ApiGateway::RestApi",
+        "Properties": {
+          "Name": "myRestApi"
+        }
+      },
+      'GatewayResponse4XX': {
+        Type: 'AWS::ApiGateway::GatewayResponse',
+        Properties: {
+          ResponseParameters: {
+            'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+            'gatewayresponse.header.Access-Control-Allow-Headers': "'*'",
+          },
+          ResponseType: 'DEFAULT_4XX',
+          RestApiId: {
+            "Ref": "RestApi"
+          }
+        }
+      },
+    },
+  },
   functions: {
     importProductsFile: {
       handler: 'src/functions/importProductsFile/importProductsFile.handler',
@@ -55,6 +79,13 @@ const serverlessConfiguration = {
             method: 'get',
             path: 'import',
             cors: true,
+            authorizer: {
+              name: 'basicAuthorizer',
+              type: 'token',
+              resultTtlInSeconds: 0,
+              identitySource: 'method.request.header.Authorization',
+              arn: `arn:aws:lambda:${process.env.REGION}:${process.env.AWS_ACCOUNT_NUMBER}:function:authorization-service-dev-basicAuthorizer`,
+            },
             request: {
               parameters: {
                 querystrings: {
